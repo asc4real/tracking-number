@@ -1,7 +1,7 @@
 # ---- First stage: Build the app ----
 FROM maven:3.9.4-eclipse-temurin-17 AS builder
 WORKDIR /app
-COPY trackingnumber/ /app
+COPY trackingnumber/app
 RUN mvn clean package -DskipTests
 
 # ---- Second stage: Run the app ----
