@@ -1,10 +1,10 @@
-# Use Maven to build the app first
+# ---- First stage: Build the app ----
 FROM maven:3.9.4-eclipse-temurin-17 AS builder
 WORKDIR /app
-COPY . .
+COPY trackingnumber/ /app
 RUN mvn clean package -DskipTests
 
-# Use a lightweight JDK to run the app
+# ---- Second stage: Run the app ----
 FROM openjdk:17-jdk-slim
 WORKDIR /app
 COPY --from=builder /app/target/*.jar app.jar
