@@ -1,17 +1,15 @@
-# Use a lightweight JDK base image
-FROM openjdk:17-jdk-slim
-
-# Set the working directory inside the container
+# Use Maven to build the app first
+FROM maven:3.9.4-eclipse-temurin-17 AS builder
 WORKDIR /app
+COPY . .
+RUN mvn clean package -DskipTests
 
-# Copy built jar from target folder into the container
-COPY target/*.jar app.jar
+# Use a lightweight JDK to run the app
+FROM openjdk:17-jdk-slim
+WORKDIR /app
+COPY --from=builder /app/target/*.jar app.jar
 
-# Set environment variable for port
-ENV PORT 8080
-
-# Expose port
+ENV PORT=8080
 EXPOSE 8080
 
-# Run the jar file
 CMD ["java", "-jar", "app.jar"]
